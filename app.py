@@ -36,4 +36,26 @@ def getAllBooks():
     # print(json.dumps(data))
     return json.dumps(response)
 
+@app.route('/book/<id>', methods = ['GET'])
+def getBookById(id):
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM book NATURAL JOIN user WHERE id = ' + str(id))
+    mysql.connection.commit()
+    data = cur.fetchall()
+    cur.close()
+    response = []
+    for row in data:
+        response.append({})
+        response[-1]['id'] = row[0]
+        response[-1]['title'] = row[1]
+        response[-1]['description'] = row[2]
+        response[-1]['imageURL'] = row[4]
+        response[-1]['user'] = {}
+        response[-1]['user']['id'] = row[3]
+        response[-1]['user']['username'] = row[5]
+        response[-1]['user']['name'] = row[7]
+
+    # print(json.dumps(data))
+    return json.dumps(response)
+
 app.run(host='localhost',port = 5000, debug= True)
