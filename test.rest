@@ -1,5 +1,8 @@
-GET http://localhost:5000/books
+# @host = vietnguyen2000.ddns.net
+@host = localhost
+
+GET http://{{host}}/books HTTP/1.1
 
 ###
 
-GET http://localhost:5000/book/1
+GET http://{{host}}/book/1 HTTP/1.1
