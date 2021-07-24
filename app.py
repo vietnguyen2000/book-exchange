@@ -1,20 +1,26 @@
 from flask import Flask
 from flask_mysqldb import MySQL
 from flask_cors import CORS
+import sys
 import json
 
 app = Flask(__name__)
 
-
-app.config['MYSQL_HOST'] = 'sql6.freemysqlhosting.net'
-app.config['MYSQL_USER'] = 'sql6411044'
-app.config['MYSQL_PASSWORD'] = 'KQwIHnkkbj'
-app.config['MYSQL_DB'] = 'sql6411044'
+app.config['MYSQL_HOST'] = 'vietnguyen2000.ddns.net'
+app.config['MYSQL_USER'] = 'cnpmnc'
+app.config['MYSQL_PASSWORD'] = 'cnpmnc'
+app.config['MYSQL_DB'] = 'book_exchange'
 
 mysql = MySQL(app)
 CORS(app)
 
-@app.route('/books' , methods = ['GET'])
+
+@app.route('/', methods=['GET'])
+def home():
+    return 'book-exchange app backend'
+
+
+@app.route('/books', methods=['GET'])
 def getAllBooks():
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM book NATURAL JOIN user')
@@ -36,7 +42,8 @@ def getAllBooks():
     # print(json.dumps(data))
     return json.dumps(response)
 
-@app.route('/book/<id>', methods = ['GET'])
+
+@app.route('/book/<id>', methods=['GET'])
 def getBookById(id):
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM book NATURAL JOIN user WHERE id = ' + str(id))
@@ -58,4 +65,9 @@ def getBookById(id):
     # print(json.dumps(data))
     return json.dumps(response)
 
-app.run(host='localhost',port = 5000, debug= True)
+
+if __name__ == "__main__":
+    if 'prod' in sys.argv:
+        app.run(host='0.0.0.0', port=80)
+    else:
+        app.run(host='localhost', port=5000, debug=True)
